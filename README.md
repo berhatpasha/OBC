@@ -1,4 +1,4 @@
-![Banner](media/banner.png)
+![Banner](OBC/media/banner.png)
 # OBC
 OpenBotConsole software allows you to connect to your bot and control it through a console
 # Requirements
@@ -27,7 +27,7 @@ OpenBotConsole software allows you to connect to your bot and control it through
 
 ## WARNİNG
 > ### As I mentioned above, make sure that the intents of the discord bot you connect to are turned on
-> ![intents](media/intents.png)
+> ![intents](OBC/media/intents.png)
 
 > ### LEGAL
 > The software is written entirely for educational purposes and for the benefit of the community. I accept no responsibility for misuse :  MIT LICENSE Copyright (c) 2024 Berat Bayraktar
