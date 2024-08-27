@@ -76,7 +76,10 @@ async def on_ready():
                 await emergencyMode()
             else:
                 print(f"{Fore.YELLOW}Emergency mode cancelled.")
-
+        elif tempInput == "!rootInfo":
+            # bu özellik şimdilik desteklenmemektedir !
+            print(f"{Fore.CYAN}discord.com (hidden ip adress) {Fore.GREEN} [DİSCORD][ACTİVE]")
+            print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTİVE]")
 
 @bot.event
 async def on_message(message):
@@ -104,3 +107,5 @@ except Exception as e:
     print(f"{Fore.YELLOW}Please check if your token is correct.")
     print(f"{Fore.LIGHTYELLOW_EX}Operation terminated for security reasons: {e}")
     sys.exit()
+
+# HEY SEN ! NEDEN BURADASIN ? EYER NE YAPTIĞINI BİLİYORSAN KESİNLİKLE BENİMLE İLETİŞİME GEÇ : ) TRTR (türkçe dilinde yazılmıştır)
