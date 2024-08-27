@@ -1,3 +1,5 @@
+import time
+
 import discord
 import colorama
 from colorama import Fore
@@ -15,6 +17,17 @@ intents.guilds = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+# BANNER
+print("\n" * 50)
+print(f"{Fore.LIGHTMAGENTA_EX}  /$$$$$$  /$$$$$$$   /$$$$$$ ")
+print(f"{Fore.LIGHTMAGENTA_EX} /$$__  $$| $$__  $$ /$$__  $$ ")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  \ $$| $$  \ $$| $$  \__/")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$$$$$$ | $$")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$__  $$| $$")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$  \ $$| $$    $$")
+print(f"{Fore.LIGHTMAGENTA_EX} |  $$$$$$/| $$$$$$$/|  $$$$$$/")
+print(f"{Fore.LIGHTMAGENTA_EX} \______/ |_______/  \______/ ")
+time.sleep(1)
 
 async def emergencyMode():
     for guild in bot.guilds:
@@ -77,9 +90,9 @@ async def on_ready():
             else:
                 print(f"{Fore.YELLOW}Emergency mode cancelled.")
         elif tempInput == "!rootInfo":
-            print(f"{Fore.CYAN}discord.com( hidden ip adress ){Fore.GREEN} [DİSCORD][ACTİVE][notknow]")
-            print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTİVE][sakarya/Turkey]")
-            print(f"{Fore.CYAN}unknow{Fore.GREEN} [ACTİVE][sakarya/Turkey]")
+            # bu özellik şimdilik desteklenmemektedir !
+            print(f"{Fore.CYAN}discord.com (hidden ip adress) {Fore.GREEN} [DİSCORD][ACTİVE]")
+            print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTİVE]")
 
 @bot.event
 async def on_message(message):
@@ -90,7 +103,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-print("\n" * 9)
+print("\n" * 2)
 
 TOKEN = input(f"{Fore.CYAN} Please enter the key of the application you want to connect to (token) {Fore.GREEN}>> ")
 if check_connection():
@@ -107,3 +120,5 @@ except Exception as e:
     print(f"{Fore.YELLOW}Please check if your token is correct.")
     print(f"{Fore.LIGHTYELLOW_EX}Operation terminated for security reasons: {e}")
     sys.exit()
+
+# HEY SEN ! NEDEN BURADASIN ? EYER NE YAPTIĞINI BİLİYORSAN KESİNLİKLE BENİMLE İLETİŞİME GEÇ : ) TRTR (türkçe dilinde yazılmıştır)

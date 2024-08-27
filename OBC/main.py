@@ -1,3 +1,5 @@
+
+
 import time
 
 import discord
@@ -8,6 +10,11 @@ import sys
 import urllib.request
 import requests
 import asyncio
+import warnings
+
+# FİLTER
+warnings.filterwarnings("ignore")
+
 
 colorama.init(autoreset=True)
 
