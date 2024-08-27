@@ -1,39 +1,35 @@
 import discord
 import colorama
 from colorama import Fore
-
-colorama.init(autoreset=True)
 from discord.ext import commands
 import sys
 import urllib.request
 import requests
 import asyncio
 
+colorama.init(autoreset=True)
+
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
 
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 
 async def emergencyMode():
-    for guild in client.guilds:
-        print("test 1")
+    for guild in bot.guilds:
         print(f'sending warning message to {guild.name} server')
         for channel in guild.text_channels:
             try:
-                print("test2")
                 await channel.send('Attention bot manager launches emergency protocol!')
                 print(f'{Fore.WHITE}{channel.name}{Fore.GREEN} ✓')
             except Exception as e:
-                print("test3")
                 print(f'{Fore.WHITE}{channel.name}{Fore.RED} x{Fore.YELLOW} [{e}]')
     try:
-        await client.close()
+        await bot.close()
         print(f"{Fore.WHITE}Delegate server authorizations{Fore.GREEN} ✓")
-    except:
-        print(f"{Fore.WHITE}Delegate server authorizations{Fore.RED} x")
-    print("XXXXXXXXXXXXXXX")
+    except Exception as e:
+        print(f"{Fore.WHITE}Delegate server authorizations{Fore.RED} x [{e}]")
     sys.exit()
 
 
@@ -42,7 +38,7 @@ def get_public_ip():
         response = requests.get('https://api.ipify.org?format=json')
         ip_info = response.json()
         return ip_info['ip']
-    except:
+    except Exception:
         return "error"
 
 
@@ -54,11 +50,6 @@ def check_connection(url="http://www.google.com"):
         return False
 
 
-bot = commands.Bot(command_prefix='!', intents=intents)
-
-TOKEN = "XYZ"
-
-
 @bot.event
 async def on_ready():
     print(f"{Fore.LIGHTWHITE_EX}Connected to discord servers with {bot.user.name} account {Fore.GREEN} ✓")
@@ -66,25 +57,29 @@ async def on_ready():
         tempInput = input(f">> {Fore.LIGHTGREEN_EX}")
         if tempInput == "!help":
             print(f"!send <channelId> <message>")
-        elif tempInput.split()[0] == "!send":
-            channelId = int(tempInput.split()[1])
-            channel = bot.get_channel(channelId)
-            if channel:
-                await channel.send(f"{tempInput.split()[2:]}")
-            else:
-                print(f"{Fore.LIGHTYELLOW_EX}Channel with ID {channelId} not found")
+        elif tempInput.startswith("!send"):
+            try:
+                channelId = int(tempInput.split()[1])
+                channel = bot.get_channel(channelId)
+                if channel:
+                    await channel.send(f"{' '.join(tempInput.split()[2:])}")
+                else:
+                    print(f"{Fore.LIGHTYELLOW_EX}Channel with ID {channelId} not found")
+            except Exception as e:
+                print(f"{Fore.RED}Error: {e}")
         elif tempInput == "!monitoringMode":
             print(f"{Fore.CYAN} Monitoring mode is on! He's listening now: All")
-            return
         elif tempInput == "!emergencyMode":
-            print(
-                f"{Fore.RED} EMERGENCY MODE: when emergency mode is turned on, your bot will exit all servers and lock itself!")
-            tempInput = input(f"{Fore.LIGHTYELLOW_EX}Are you sure? (Y/N)(default:N)")
+            print(f"{Fore.RED} EMERGENCY MODE: when emergency mode is turned on, your bot will exit all servers and lock itself!")
+            tempInput = input(f"{Fore.LIGHTYELLOW_EX}Are you sure? (Y/N)(default:N) ")
             if tempInput.lower() == "y":
                 await emergencyMode()
             else:
                 print(f"{Fore.YELLOW}Emergency mode cancelled.")
-
+        elif tempInput == "!rootInfo":
+            print(f"{Fore.CYAN}discord.com( hidden ip adress ){Fore.GREEN} [DİSCORD][ACTİVE][notknow]")
+            print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTİVE][sakarya/Turkey]")
+            print(f"{Fore.CYAN}unknow{Fore.GREEN} [ACTİVE][sakarya/Turkey]")
 
 @bot.event
 async def on_message(message):
@@ -107,8 +102,8 @@ else:
 try:
     print(f"{Fore.LIGHTWHITE_EX}Connecting to the app{Fore.GREEN} ✓")
     bot.run(TOKEN)
-except:
+except Exception as e:
     print(f"{Fore.LIGHTWHITE_EX}Connecting to the app{Fore.RED} x")
     print(f"{Fore.YELLOW}Please check if your token is correct.")
-    print(f"{Fore.LIGHTYELLOW_EX}Operation terminated for security reasons")
+    print(f"{Fore.LIGHTYELLOW_EX}Operation terminated for security reasons: {e}")
     sys.exit()
