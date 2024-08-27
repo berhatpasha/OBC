@@ -1,3 +1,5 @@
+import time
+
 import discord
 import colorama
 from colorama import Fore
@@ -15,6 +17,17 @@ intents.guilds = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+# BANNER
+print("\n" * 50)
+print(f"{Fore.LIGHTMAGENTA_EX}  /$$$$$$  /$$$$$$$   /$$$$$$ ")
+print(f"{Fore.LIGHTMAGENTA_EX} /$$__  $$| $$__  $$ /$$__  $$ ")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  \ $$| $$  \ $$| $$  \__/")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$$$$$$ | $$")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$__  $$| $$")
+print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$  \ $$| $$    $$")
+print(f"{Fore.LIGHTMAGENTA_EX} |  $$$$$$/| $$$$$$$/|  $$$$$$/")
+print(f"{Fore.LIGHTMAGENTA_EX} \______/ |_______/  \______/ ")
+time.sleep(1)
 
 async def emergencyMode():
     for guild in bot.guilds:
@@ -90,7 +103,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-print("\n" * 9)
+print("\n" * 2)
 
 TOKEN = input(f"{Fore.CYAN} Please enter the key of the application you want to connect to (token) {Fore.GREEN}>> ")
 if check_connection():
