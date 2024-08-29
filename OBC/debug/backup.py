@@ -1,5 +1,5 @@
 import time
-
+import os
 import discord
 import colorama
 from colorama import Fore
@@ -8,8 +8,12 @@ import sys
 import urllib.request
 import requests
 import asyncio
+import warnings
 
 colorama.init(autoreset=True)
+
+# FİLTER
+warnings.filterwarnings("ignore")
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -63,13 +67,17 @@ def check_connection(url="http://www.google.com"):
         return False
 
 
-@bot.event
-async def on_ready():
-    print(f"{Fore.LIGHTWHITE_EX}Connected to discord servers with {bot.user.name} account {Fore.GREEN} ✓")
+async def read_user_input():
     while True:
-        tempInput = input(f">> {Fore.LIGHTGREEN_EX}")
+        tempInput = await asyncio.get_event_loop().run_in_executor(None, input, f">> {Fore.LIGHTGREEN_EX}")
         if tempInput == "!help":
-            print(f"!send <channelId> <message>")
+            print(f"{Fore.CYAN}!send {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<message>")
+            print(f"{Fore.CYAN}!monitoringMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!emergencyMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!ban {Fore.LIGHTCYAN_EX}<userID>")
+            print(f"{Fore.CYAN}!kick {Fore.LIGHTCYAN_EX}<userID>")
+            print(f"{Fore.CYAN}!mute {Fore.LIGHTCYAN_EX}<userID> {Fore.BLUE}<duration (in minutes)>")
+            print(f"{Fore.CYAN}!rootInfo {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
         elif tempInput.startswith("!send"):
             try:
                 channelId = int(tempInput.split()[1])
@@ -93,6 +101,19 @@ async def on_ready():
             # bu özellik şimdilik desteklenmemektedir !
             print(f"{Fore.CYAN}discord.com (hidden ip adress) {Fore.GREEN} [DİSCORD][ACTİVE]")
             print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTİVE]")
+        elif tempInput.split()[0] == "!ban":
+            pass
+        elif tempInput.split()[0] == "!kick":
+            pass
+        elif tempInput.split()[0] == "!mute":
+            pass
+
+
+@bot.event
+async def on_ready():
+    print(f"{Fore.LIGHTWHITE_EX}Connected to discord servers with {bot.user.name} account {Fore.GREEN} ✓")
+    asyncio.create_task(read_user_input())  # Kullanıcı girişini işleme görevini başlatıyoruz
+
 
 @bot.event
 async def on_message(message):
@@ -120,5 +141,3 @@ except Exception as e:
     print(f"{Fore.YELLOW}Please check if your token is correct.")
     print(f"{Fore.LIGHTYELLOW_EX}Operation terminated for security reasons: {e}")
     sys.exit()
-
-# HEY SEN ! NEDEN BURADASIN ? EYER NE YAPTIĞINI BİLİYORSAN KESİNLİKLE BENİMLE İLETİŞİME GEÇ : ) TRTR (türkçe dilinde yazılmıştır)
