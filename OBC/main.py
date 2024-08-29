@@ -10,6 +10,8 @@ import requests
 import asyncio
 import warnings
 
+version = "0.1 BETA"
+
 colorama.init(autoreset=True)
 
 # FİLTER
@@ -23,15 +25,33 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 # BANNER
 print("\n" * 50)
-print(f"{Fore.LIGHTMAGENTA_EX}  /$$$$$$  /$$$$$$$   /$$$$$$ ")
-print(f"{Fore.LIGHTMAGENTA_EX} /$$__  $$| $$__  $$ /$$__  $$ ")
-print(f"{Fore.LIGHTMAGENTA_EX} | $$  \ $$| $$  \ $$| $$  \__/")
-print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$$$$$$ | $$")
-print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$__  $$| $$")
-print(f"{Fore.LIGHTMAGENTA_EX} | $$  | $$| $$  \ $$| $$    $$")
-print(f"{Fore.LIGHTMAGENTA_EX} |  $$$$$$/| $$$$$$$/|  $$$$$$/")
-print(f"{Fore.LIGHTMAGENTA_EX} \______/ |_______/  \______/ ")
 time.sleep(1)
+print(f'''{Fore.LIGHTBLUE_EX}
+
+
+
+
+ 
+           
+        
+       "$$$$bo.
+         "$$$$$$$$booocS$$$    ..    ,.
+     ".    "*$$$$SP{Fore.LIGHTRED_EX}*****{Fore.LIGHTBLUE_EX}V$o..o$$. .$$$b                ░█████╗░██████╗░░█████╗░
+      "$$o. .$$$$$o{Fore.LIGHTRED_EX}*****{Fore.LIGHTBLUE_EX}A$$$$$$$$$$$$$$b               ██╔══██╗██╔══██╗██╔══██╗
+""bo.   "*$$$$$$$$$$$$$$$$$$$$P*$$$$$$$$:              ██║░░██║██████╦╝██║░░╚═╝
+    "$$.    V$$$$$$$$$P"**""*"'   VP  * "l             ██║░░██║██╔══██╗██║░░██╗
+     "$$$o.4$$$$$$$$X                                  ╚█████╔╝██████╦╝╚█████╔╝
+     "*$$$$$$$$$$$$${Fore.LIGHTRED_EX}AoA$o..{Fore.LIGHTRED_EX}oooooo..           .b{Fore.LIGHTBLUE_EX}       ░╚════╝░╚═════╝░░╚════╝░
+            .X$$$$$$$$$$$P""     {Fore.LIGHTRED_EX}""*oo,,     ,$P{Fore.LIGHTBLUE_EX}       {Fore.CYAN}o⃨p⃨e⃨n⃨ b⃨o⃨t⃨ c⃨o⃨n⃨s⃨o⃨l⃨e⃨ {Fore.LIGHTYELLOW_EX}{version}{Fore.LIGHTBLUE_EX}
+           $$P""V$$$$$$$:    .        {Fore.LIGHTRED_EX}""*****"{Fore.LIGHTBLUE_EX}  {Fore.CYAN}    Github :{Fore.LIGHTYELLOW_EX} https://bit.ly/4h2u{Fore.LIGHTBLUE_EX} 
+          .*"    A$$$$$$$$o.4;      .
+               .oP""   "$$$$$$b.  .$;
+                         A$$$$$$$$$$P
+                         "  "$$$$$P"
+                             $$P*"
+                            .$"
+                            "
+''')
 
 async def emergencyMode():
     for guild in bot.guilds:
@@ -73,6 +93,7 @@ def check_connection(url="http://www.google.com"):
         return False
 
 async def read_user_input():
+    print(f"{Fore.GREEN}Interaction complete ! For help, try this :{Fore.CYAN} !help")
     while True:
         tempInput = await asyncio.get_event_loop().run_in_executor(None, input, f">> {Fore.LIGHTGREEN_EX}")
         if tempInput == "!help":
@@ -83,14 +104,17 @@ async def read_user_input():
             print(f"{Fore.CYAN}!kick {Fore.LIGHTCYAN_EX}<userID>")
             print(f"{Fore.CYAN}!mute {Fore.LIGHTCYAN_EX}<userID> {Fore.BLUE}<duration (in minutes)>")
             print(f"{Fore.CYAN}!rootInfo {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!clear {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count>")
         elif tempInput.startswith("!send"):
             try:
                 channelId = int(tempInput.split()[1])
                 channel = bot.get_channel(channelId)
                 if channel:
                     await channel.send(f"{' '.join(tempInput.split()[2:])}")
+                    print(f"{Fore.LIGHTGREEN_EX} Your message has been sent ✓")
                 else:
                     print(f"{Fore.LIGHTYELLOW_EX}Channel with ID {channelId} not found")
+                    print(f"{Fore.LIGHTRED_EX} Send operation failed x")
             except Exception as e:
                 print(f"{Fore.RED}Error: {e}")
         elif tempInput == "!monitoringMode":
@@ -111,6 +135,13 @@ async def read_user_input():
             pass
         elif tempInput.split()[0] == "!mute":
             pass
+        elif tempInput.split()[0] == "!clear":
+            channel = bot.get_channel(int(tempInput.split()[1]))
+            if not channel:
+                print(f"{Fore.LIGHTRED_EX}The channel in question was not found x")
+            else:
+                deleted = await channel.purge(limit=int(tempInput.split()[2]))
+                print(f"{Fore.CYAN}{len(deleted)}{Fore.LIGHTGREEN_EX} messages deleted ✓")
 
 @bot.event
 async def on_ready():
@@ -124,8 +155,6 @@ async def on_message(message):
 
     print(f"{Fore.CYAN}{message.author}: {Fore.WHITE}{message.content}")
     await bot.process_commands(message)
-
-print("\n" * 2)
 
 TOKEN = input(f"{Fore.CYAN} Please enter the key of the application you want to connect to (token) {Fore.GREEN}>> ")
 if check_connection():
