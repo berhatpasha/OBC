@@ -11,7 +11,7 @@ import asyncio
 import warnings
 import threading
 
-version = "0.1 BETA"
+version = "0.2 BETA"
 
 colorama.init(autoreset=True)
 
