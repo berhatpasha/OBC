@@ -9,6 +9,7 @@ import urllib.request
 import requests
 import asyncio
 import warnings
+import threading
 
 version = "0.1 BETA"
 
@@ -31,19 +32,19 @@ print(f'''{Fore.LIGHTBLUE_EX}
 
 
 
- 
-           
-        
+
+
+
        "$$$$bo.
          "$$$$$$$$booocS$$$    ..    ,.
-     ".    "*$$$$SP{Fore.LIGHTRED_EX}*****{Fore.LIGHTBLUE_EX}V$o..o$$. .$$$b                ░█████╗░██████╗░░█████╗░
-      "$$o. .$$$$$o{Fore.LIGHTRED_EX}*****{Fore.LIGHTBLUE_EX}A$$$$$$$$$$$$$$b               ██╔══██╗██╔══██╗██╔══██╗
-""bo.   "*$$$$$$$$$$$$$$$$$$$$P*$$$$$$$$:              ██║░░██║██████╦╝██║░░╚═╝
-    "$$.    V$$$$$$$$$P"**""*"'   VP  * "l             ██║░░██║██╔══██╗██║░░██╗
-     "$$$o.4$$$$$$$$X                                  ╚█████╔╝██████╦╝╚█████╔╝
-     "*$$$$$$$$$$$$${Fore.LIGHTRED_EX}AoA$o..{Fore.LIGHTRED_EX}oooooo..           .b{Fore.LIGHTBLUE_EX}       ░╚════╝░╚═════╝░░╚════╝░
-            .X$$$$$$$$$$$P""     {Fore.LIGHTRED_EX}""*oo,,     ,$P{Fore.LIGHTBLUE_EX}       {Fore.CYAN}o⃨p⃨e⃨n⃨ b⃨o⃨t⃨ c⃨o⃨n⃨s⃨o⃨l⃨e⃨ {Fore.LIGHTYELLOW_EX}{version}{Fore.LIGHTBLUE_EX}
-           $$P""V$$$$$$$:    .        {Fore.LIGHTRED_EX}""*****"{Fore.LIGHTBLUE_EX}  {Fore.CYAN}    Github :{Fore.LIGHTYELLOW_EX} https://bit.ly/4h2u{Fore.LIGHTBLUE_EX} 
+     ".    "*$$$$SP{Fore.LIGHTRED_EX}*****{Fore.LIGHTBLUE_EX}V$o..o$$. .$$$b             ░█████╗░██████╗░░█████╗░
+      "$$o. .$$$$$o{Fore.LIGHTRED_EX}*****{Fore.LIGHTBLUE_EX}A$$$$$$$$$$$$$$b            ██╔══██╗██╔══██╗██╔══██╗
+""bo.   "*$$$$$$$$$$$$$$$$$$$$P*$$$$$$$$:           ██║░░██║██████╦╝██║░░╚═╝
+    "$$.    V$$$$$$$$$P"**""*"'   VP  * "l          ██║░░██║██╔══██╗██║░░██╗
+     "$$$o.4$$$$$$$$X                               ╚█████╔╝██████╦╝╚█████╔╝
+     "*$$$$$$$$$$$$${Fore.LIGHTRED_EX}AoA$o..{Fore.LIGHTRED_EX}oooooo..           .b{Fore.LIGHTBLUE_EX}    ░╚════╝░╚═════╝░░╚════╝░
+            .X$$$$$$$$$$$P""     {Fore.LIGHTRED_EX}""*oo,,     ,$P{Fore.LIGHTBLUE_EX}   {Fore.CYAN}o⃨p⃨e⃨n⃨ b⃨o⃨t⃨ c⃨o⃨n⃨s⃨o⃨l⃨e⃨ {Fore.LIGHTYELLOW_EX}{version}{Fore.LIGHTBLUE_EX}
+           $$P""V$$$$$$$:    .        {Fore.LIGHTRED_EX}""*****"{Fore.LIGHTBLUE_EX}  {Fore.CYAN} Github :{Fore.LIGHTYELLOW_EX} https://bit.ly/4h2u{Fore.LIGHTBLUE_EX} 
           .*"    A$$$$$$$$o.4;      .
                .oP""   "$$$$$$b.  .$;
                          A$$$$$$$$$$P
@@ -52,6 +53,17 @@ print(f'''{Fore.LIGHTBLUE_EX}
                             .$"
                             "
 ''')
+
+
+async def spam(count, msg, spamChannelID):
+    i = 0
+    mychannel = bot.get_channel(spamChannelID)
+    print("İşlem başlatıldı")
+    while i < int(count):
+        await mychannel.send(f"{' '.join(msg)}")
+        i = i + 1
+    print("İşlem başarılı")
+
 
 async def emergencyMode():
     for guild in bot.guilds:
@@ -76,6 +88,7 @@ async def emergencyMode():
         print(f"{Fore.WHITE}Failed to shutdown bot{Fore.RED} x [{e}]")
     sys.exit()
 
+
 def get_public_ip():
     try:
         response = requests.get('https://api.ipify.org?format=json')
@@ -84,6 +97,7 @@ def get_public_ip():
     except Exception:
         return "error"
 
+
 def check_connection(url="http://www.google.com"):
     try:
         urllib.request.urlopen(url, timeout=5)
@@ -91,10 +105,11 @@ def check_connection(url="http://www.google.com"):
     except urllib.error.URLError:
         return False
 
+
 async def read_user_input():
     print(f"{Fore.GREEN}Interaction complete ! For help, try this :{Fore.CYAN} !help")
     while True:
-        tempInput = await asyncio.get_event_loop().run_in_executor(None, input, f">> {Fore.LIGHTGREEN_EX}")
+        tempInput = await asyncio.get_event_loop().run_in_executor(None, input, f"{Fore.LIGHTGREEN_EX}")
         if tempInput == "!help":
             print(f"{Fore.CYAN}!send {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<message>")
             print(f"{Fore.CYAN}!monitoringMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
@@ -104,6 +119,8 @@ async def read_user_input():
             print(f"{Fore.CYAN}!mute {Fore.LIGHTCYAN_EX}<userID> {Fore.BLUE}<duration (in minutes)>")
             print(f"{Fore.CYAN}!rootInfo {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
             print(f"{Fore.CYAN}!clear {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count>")
+            print(f"{Fore.CYAN}!changeStatus {Fore.LIGHTCYAN_EX}<type> {Fore.BLUE}<name>")  # type = game(discord.Game)
+            print(f"{Fore.CYAN}!spam {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count> {Fore.LIGHTMAGENTA_EX}<message>")
         elif tempInput.startswith("!send"):
             try:
                 channelId = int(tempInput.split()[1])
@@ -119,7 +136,8 @@ async def read_user_input():
         elif tempInput == "!monitoringMode":
             print(f"{Fore.CYAN} Monitoring mode is on! Listening to all messages.")
         elif tempInput == "!emergencyMode":
-            print(f"{Fore.RED} EMERGENCY MODE: When emergency mode is turned on, your bot will exit all servers and lock itself!")
+            print(
+                f"{Fore.RED} EMERGENCY MODE: When emergency mode is turned on, your bot will exit all servers and lock itself!")
             confirm = input(f"{Fore.LIGHTYELLOW_EX}Are you sure? (Y/N)(default:N) ")
             if confirm.lower() == "y":
                 await emergencyMode()
@@ -129,9 +147,22 @@ async def read_user_input():
             print(f"{Fore.CYAN}discord.com (hidden IP address) {Fore.GREEN} [DİSCORD][ACTIVE]")
             print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTIVE]")
         elif tempInput.split()[0] == "!ban":
-            pass
+            try:
+                user = await bot.fetch_user(tempInput.split()[1])
+                guild = discord.utils.get(bot.guilds)
+                await guild.ban(user, reason=f"Banned by {bot.user.name} using OBC")
+                print(f"{Fore.GREEN}transaction successful  ✓")
+            except Exception as e:
+                print(f"{Fore.RED}transaction failed x :::: {e}")
+            tempInput.split()[1]
         elif tempInput.split()[0] == "!kick":
-            pass
+            guild = discord.utils.get(bot.guilds)
+            try:
+                member = guild.get_member(int(tempInput.split()[1]))
+                await guild.kick(member, reason=f"Kicked by {bot.user.name} using OBC")
+                print(f"{Fore.GREEN}Process successful ✓")
+            except Exception as e:
+                print(f"{Fore.RED}Operation failed x ::::{e} ")
         elif tempInput.split()[0] == "!mute":
             pass
         elif tempInput.split()[0] == "!clear":
@@ -141,11 +172,51 @@ async def read_user_input():
             else:
                 deleted = await channel.purge(limit=int(tempInput.split()[2]))
                 print(f"{Fore.CYAN}{len(deleted)}{Fore.LIGHTGREEN_EX} messages deleted ✓")
+        elif tempInput.split()[0] == "!changeStatus":
+            if tempInput.split()[1] == "game":
+                try:
+                    await bot.change_presence(activity=discord.Game(name=' '.join(tempInput.split()[2:])))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except:
+                    print(f"{Fore.RED}Operation failed x")
+            elif tempInput.split()[1] == "stream":
+                try:
+                    await bot.change_presence(activity=discord.Streaming(name=tempInput.split()[2:]))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except:
+                    print(f"{Fore.RED}Operation failed x")
+            elif tempInput.split()[1] == "listen":
+                try:
+                    await bot.change_presence(
+                        activity=discord.Activity(type=discord.ActivityType.listening, name=tempInput.split()[2:]))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except:
+                    print(f"{Fore.RED}Operation failed x")
+            elif tempInput.split()[1] == "watch":
+                try:
+                    await bot.change_presence(
+                        activity=discord.Activity(type=discord.ActivityType.watching, name=tempInput.split()[2:]))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except:
+                    print(f"{Fore.RED}Operation failed x")
+            elif tempInput.split()[1] == "custom":
+                try:
+                    await bot.change_presence(
+                        activity=discord.Activity(type=discord.ActivityType.custom, name=tempInput.split()[2:]))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except:
+                    print(f"{Fore.RED}Operation failed x")
+        elif tempInput.split()[0] == "!spam":
+            spamChannelID = int(tempInput.split()[1])
+            count = tempInput.split()[2]
+            msg = tempInput.split()[3:]
+            spam(count, msg, spamChannelID)
+
 
 @bot.event
 async def on_ready():
     print(f"{Fore.LIGHTWHITE_EX}Connected to Discord servers with {bot.user.name} account {Fore.GREEN} ✓")
-    asyncio.create_task(read_user_input())  # Start task to handle user input
+    asyncio.create_task(read_user_input())
 
 @bot.event
 async def on_message(message):
@@ -154,6 +225,7 @@ async def on_message(message):
 
     print(f"{Fore.CYAN}{message.author}: {Fore.WHITE}{message.content}")
     await bot.process_commands(message)
+
 
 TOKEN = input(f"{Fore.CYAN} Please enter the key of the application you want to connect to (token) {Fore.GREEN}>> ")
 if check_connection():
