@@ -161,6 +161,8 @@ async def read_user_input():
             print(f"{Fore.CYAN}!clear {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count>")
             print(f"{Fore.CYAN}!changeStatus {Fore.LIGHTCYAN_EX}<type> {Fore.BLUE}<name>")  # type = game(discord.Game)
             print(f"{Fore.CYAN}!spam {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count> {Fore.LIGHTMAGENTA_EX}<message>")
+            print(f"{Fore.CYAN}!invisibleMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!role {Fore.LIGHTCYAN_EX}<+/-> {Fore.BLUE}<role ID> {Fore.LIGHTMAGENTA_EX}<user ID>")
         elif tempInput.startswith("!send"):
             try:
                 channelId = int(tempInput.split()[1])
@@ -265,12 +267,53 @@ async def read_user_input():
                 await mychannel.send(f"{' '.join(msg)}")
                 i = i + 1
             print(f"{Fore.GREEN}Operation successful ✓")
-        elif tempInput.split()[0] == "!secretMode":
+        elif tempInput.split()[0] == "!invisibleMode":
             tempInput = input(f"{Fore.YELLOW} Are you sure (y/n)")
             if tempInput.lower() == "y" or tempInput.lower() == "yes":
                 invisibleMode()
             else:
                 print(f"{Fore.RED} xxx")
+        elif tempInput.split()[0] == "!role":
+            if tempInput.split()[1] == "+":
+                roleID = int(tempInput.split()[2])
+                userID = int(tempInput.split()[3])
+                try:
+                    for guild in bot.guilds:
+                        member = guild.get_member(userID)
+                        if member is None:
+                            print(f"{Fore.RED}user not found in {guild.name} x")
+                            continue
+                        role = guild.get_role(roleID)
+                        if role is None:
+                            print(f"{Fore.RED}{guild.name} not found x")
+                            continue
+
+                    if role not in member.roles:
+                        await member.add_roles(role)
+                        print(f"{Fore.GREEN}Operation successful ✓")
+                    else:
+                        print(f"{Fore.RED}in {guild.name} user({member.name}) already have {role.name} role x")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "-":
+                roleID = int(tempInput.split()[2])
+                userID = int(tempInput.split()[3])
+                for guild in bot.guilds:
+                    member = guild.get_member(userID)
+                    if member is None:
+                        print(f"{Fore.RED}user not found x")
+                        continue
+                    role = guild.get_role(roleID)
+                    if role is None:
+                        print(f"{Fore.RED}role not found x")
+                        continue
+                    if role in member.roles:
+                        await member.remove_roles(role)
+                        print(f"{Fore.GREEN}Operation successful ✓")
+                    else:
+                        print(
+                            f"in {guild.name} user({member.name}) already dont have {role.name}")
+
 
 
 
