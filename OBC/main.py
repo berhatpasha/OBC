@@ -10,9 +10,12 @@ import requests
 import asyncio
 import warnings
 import threading
+from database import version
+from database import versionHash
+import requests
+from bs4 import BeautifulSoup
 
-version = "0.2 BETA"
-
+update = False
 colorama.init(autoreset=True)
 
 # FİLTER
@@ -23,6 +26,46 @@ intents.message_content = True
 intents.guilds = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
+# VERSİON CONTROL
+
+
+try:
+    url = "https://raw.githubusercontent.com/berhatpasha/OBC/main/OBC/versionControl/version"
+    response = requests.get(url)
+    response.raise_for_status()
+    content = response.text.strip()
+
+    print(f"{Fore.CYAN}Last version : {content}")
+    print(f"{Fore.CYAN}Used version : {versionHash}")
+    if versionHash == content:
+        print(f"{Fore.GREEN}OBC in its most current version ✓")
+        time.sleep(3)
+    else:
+        print(""*2)
+        print(f"{Fore.YELLOW}Update available ! ")
+        print(f"{Fore.YELLOW}Use : git clone https://github.com/berhatpasha/OBC.git")
+        update = True
+except requests.exceptions.RequestException as e:
+    print(f"Request failed: {e}")
+
+if update:
+    print(f"{Fore.YELLOW} It will resume in 20 seconds.")
+    time.sleep(20)
+else:
+    time.sleep(10)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # BANNER
 print("\n" * 50)
@@ -53,16 +96,6 @@ print(f'''{Fore.LIGHTBLUE_EX}
                             .$"
                             "
 ''')
-
-
-async def spam(count, msg, spamChannelID):
-    i = 0
-    mychannel = bot.get_channel(spamChannelID)
-    print("İşlem başlatıldı")
-    while i < int(count):
-        await mychannel.send(f"{' '.join(msg)}")
-        i = i + 1
-    print("İşlem başarılı")
 
 
 async def emergencyMode():
@@ -104,6 +137,13 @@ def check_connection(url="http://www.google.com"):
         return True
     except urllib.error.URLError:
         return False
+
+def invisibleMode():
+    print("")
+    print(f"{Fore.CYAN}You've turned on invisible mode!")
+    print(f"{Fore.GREEN}!send command lost ✓")
+    print(f"{Fore.GREEN}!changeStatus command is lost ✓")
+    print(f"{Fore.GREEN}Bot status invisible ✓")
 
 
 async def read_user_input():
@@ -163,8 +203,6 @@ async def read_user_input():
                 print(f"{Fore.GREEN}Process successful ✓")
             except Exception as e:
                 print(f"{Fore.RED}Operation failed x ::::{e} ")
-        elif tempInput.split()[0] == "!mute":
-            pass
         elif tempInput.split()[0] == "!clear":
             channel = bot.get_channel(int(tempInput.split()[1]))
             if not channel:
@@ -177,40 +215,63 @@ async def read_user_input():
                 try:
                     await bot.change_presence(activity=discord.Game(name=' '.join(tempInput.split()[2:])))
                     print(f"{Fore.GREEN}Operation successful ✓")
-                except:
-                    print(f"{Fore.RED}Operation failed x")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
             elif tempInput.split()[1] == "stream":
                 try:
-                    await bot.change_presence(activity=discord.Streaming(name=tempInput.split()[2:]))
+                    await bot.change_presence(activity=discord.Streaming(name=' '.join(tempInput.split()[2:])))
                     print(f"{Fore.GREEN}Operation successful ✓")
-                except:
-                    print(f"{Fore.RED}Operation failed x")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
             elif tempInput.split()[1] == "listen":
                 try:
                     await bot.change_presence(
-                        activity=discord.Activity(type=discord.ActivityType.listening, name=tempInput.split()[2:]))
+                        activity=discord.Activity(type=discord.ActivityType.listening,
+                                                  name=' '.join(tempInput.split()[2:])))
                     print(f"{Fore.GREEN}Operation successful ✓")
-                except:
-                    print(f"{Fore.RED}Operation failed x")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
             elif tempInput.split()[1] == "watch":
                 try:
                     await bot.change_presence(
-                        activity=discord.Activity(type=discord.ActivityType.watching, name=tempInput.split()[2:]))
+                        activity=discord.Activity(type=discord.ActivityType.watching,
+                                                  name=' '.join(tempInput.split()[2:])))
                     print(f"{Fore.GREEN}Operation successful ✓")
-                except:
-                    print(f"{Fore.RED}Operation failed x")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
             elif tempInput.split()[1] == "custom":
                 try:
                     await bot.change_presence(
-                        activity=discord.Activity(type=discord.ActivityType.custom, name=tempInput.split()[2:]))
+                        activity=discord.Activity(type=discord.ActivityType.custom,
+                                                  name=' '.join(tempInput.split()[2:])))
                     print(f"{Fore.GREEN}Operation successful ✓")
-                except:
-                    print(f"{Fore.RED}Operation failed x")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "invisible":
+                try:
+                    await bot.change_presence(status=discord.Status.invisible)
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+
         elif tempInput.split()[0] == "!spam":
             spamChannelID = int(tempInput.split()[1])
             count = tempInput.split()[2]
             msg = tempInput.split()[3:]
-            spam(count, msg, spamChannelID)
+            i = 0
+            mychannel = bot.get_channel(spamChannelID)
+            print(f"{Fore.CYAN}Process initiated")
+            while i < int(count):
+                await mychannel.send(f"{' '.join(msg)}")
+                i = i + 1
+            print(f"{Fore.GREEN}Operation successful ✓")
+        elif tempInput.split()[0] == "!secretMode":
+            tempInput = input(f"{Fore.YELLOW} Are you sure (y/n)")
+            if tempInput.lower() == "y" or tempInput.lower() == "yes":
+                invisibleMode()
+            else:
+                print(f"{Fore.RED} xxx")
+
 
 
 @bot.event
@@ -223,7 +284,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    print(f"{Fore.CYAN}{message.author}: {Fore.WHITE}{message.content}")
+    print(f"{Fore.CYAN}{message.author}{Fore.LIGHTBLUE_EX}({message.channel.name}): {Fore.WHITE}{message.content}")
     await bot.process_commands(message)
 
 
