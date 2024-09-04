@@ -11,8 +11,8 @@ OpenBotConsole software allows you to connect to your bot and control it through
 > - discord
 > - requests
 > - colorama
-# Usage
-
+# Setup
+ 
 > ### Windows
 > - Download project files from your web browser or git windows client
 > - If your libraries are missing, use this : `pip install -r requirements.txt`
@@ -24,6 +24,11 @@ OpenBotConsole software allows you to connect to your bot and control it through
 > - Enter the directory with the `cd OBC` command
 > - Start the software with `python3 main.py` or `python3 main.py <token>`
 > - If you did not specify a token when starting the software (`python3 main.py can be used as <token>`) connect to your bot by entering your token on the first login
+
+> ### screenshot
+> ![screenshot](OBC/media/screenshot1.png)
+> ![screenshot](OBC/media/screenshot2.png)
+> ![screenshot](OBC/media/screenshot3.png)
 
 ## WARNİNG
 > ### As I mentioned above, make sure that the intents of the discord bot you connect to are turned on
