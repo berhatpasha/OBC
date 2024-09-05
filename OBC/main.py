@@ -1,62 +1,62 @@
+import time
+import discord
+import colorama
+from colorama import Fore
+from discord.ext import commands
+import sys
+import urllib.request
+import asyncio
+import warnings
+from database import version
+from database import versionHash
+import requests
+
+
+update = False
+colorama.init(autoreset=True)
+
+# FİLTER
+warnings.filterwarnings("ignore")
+
+intents = discord.Intents.default()
+intents.message_content = True
+intents.guilds = True
+
+bot = commands.Bot(command_prefix='!', intents=intents)
+# VERSİON CONTROL
+
+
 try:
-    import time
-    import discord
-    import colorama
-    from colorama import Fore
-    from discord.ext import commands
-    import sys
-    import urllib.request
-    import asyncio
-    import warnings
-    from database import version
-    from database import versionHash
-    import requests
+    url = "https://raw.githubusercontent.com/berhatpasha/OBC/main/OBC/versionControl/version"
+    response = requests.get(url)
+    response.raise_for_status()
+    content = response.text.strip()
 
-    update = False
-    colorama.init(autoreset=True)
-
-    # FİLTER
-    warnings.filterwarnings("ignore")
-
-    intents = discord.Intents.default()
-    intents.message_content = True
-    intents.guilds = True
-
-    bot = commands.Bot(command_prefix='!', intents=intents)
-    # VERSİON CONTROL
-
-
-    try:
-        url = "https://raw.githubusercontent.com/berhatpasha/OBC/main/OBC/versionControl/version"
-        response = requests.get(url)
-        response.raise_for_status()
-        content = response.text.strip()
-
-        print(f"{Fore.CYAN}Last version : {content}")
-        print(f"{Fore.CYAN}Used version : {versionHash}")
-        if versionHash == content:
-            print(f"{Fore.GREEN}OBC in its most current version ✓")
-            time.sleep(3)
-        else:
-            print(""*2)
-            print(f"{Fore.YELLOW}Update available ! ")
-            print(f"{Fore.YELLOW}Use : git clone https://github.com/berhatpasha/OBC.git")
-            update = True
-    except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
-
-    if update:
-        print(f"{Fore.YELLOW} It will resume in 20 seconds.")
-        time.sleep(20)
+    print(f"{Fore.CYAN}Last version : {content}")
+    print(f"{Fore.CYAN}Used version : {versionHash}")
+    if versionHash == content:
+        print(f"{Fore.GREEN}OBC in its most current version ✓")
+        time.sleep(3)
     else:
-        time.sleep(5)
+        print("\n"*2)
+        print(f"{Fore.YELLOW}Update available ! ")
+        print(f"{Fore.YELLOW}Use : git clone https://github.com/berhatpasha/OBC.git")
+        update = True
+except requests.exceptions.RequestException as e:
+    print(f"Request failed: {e}")
+
+if update:
+    print(f"{Fore.YELLOW} It will resume in 20 seconds.")
+    time.sleep(20)
+else:
+    time.sleep(5)
 
 
 
-    # BANNER
-    print("\n" * 50)
-    time.sleep(1)
-    print(f'''{Fore.LIGHTBLUE_EX}
+# BANNER
+print("\n" * 50)
+time.sleep(1)
+print(f'''{Fore.LIGHTBLUE_EX}
 
 
 
@@ -81,257 +81,259 @@ try:
 ''')
 
 
-    async def emergencyMode():
-        for guild in bot.guilds:
-            print(f'Sending warning message to {guild.name} server')
-            for channel in guild.text_channels:
-                try:
-                    await channel.send('Attention! Bot manager launches emergency protocol!')
-                    print(f'{Fore.WHITE}{channel.name}{Fore.GREEN} ✓')
-                except Exception as e:
-                    print(f'{Fore.WHITE}{channel.name}{Fore.RED} x{Fore.YELLOW} [{e}]')
-
+async def emergencyMode():
+    for guild in bot.guilds:
+        print(f'Sending warning message to {guild.name} server')
+        for channel in guild.text_channels:
             try:
-                await guild.leave()
-                print(f'Left server: {guild.name} {Fore.GREEN} ✓')
+                await channel.send('Attention! Bot manager launches emergency protocol!')
+                print(f'{Fore.WHITE}{channel.name}{Fore.GREEN} ✓')
             except Exception as e:
-                print(f'Failed to leave server: {guild.name} {Fore.RED} x [{e}]')
+                print(f'{Fore.WHITE}{channel.name}{Fore.RED} x{Fore.YELLOW} [{e}]')
 
         try:
-            await bot.close()
-            print(f"{Fore.WHITE}Bot shutdown successfully{Fore.GREEN} ✓")
+            await guild.leave()
+            print(f'Left server: {guild.name} {Fore.GREEN} ✓')
         except Exception as e:
-            print(f"{Fore.WHITE}Failed to shutdown bot{Fore.RED} x [{e}]")
-        sys.exit()
+            print(f'Failed to leave server: {guild.name} {Fore.RED} x [{e}]')
+
+    try:
+        await bot.close()
+        print(f"{Fore.WHITE}Bot shutdown successfully{Fore.GREEN} ✓")
+    except Exception as e:
+        print(f"{Fore.WHITE}Failed to shutdown bot{Fore.RED} x [{e}]")
+    sys.exit()
 
 
-    def get_public_ip():
-        try:
-            response = requests.get('https://api.ipify.org?format=json')
-            ip_info = response.json()
-            return ip_info['ip']
-        except Exception:
-            return "error"
+def get_public_ip():
+    try:
+        response = requests.get('https://api.ipify.org?format=json')
+        ip_info = response.json()
+        return ip_info['ip']
+    except Exception:
+        return "error"
 
 
-    def check_connection(url="http://www.google.com"):
-        try:
-            urllib.request.urlopen(url, timeout=5)
-            return True
-        except urllib.error.URLError:
-            return False
+def check_connection(url="http://www.google.com"):
+    try:
+        urllib.request.urlopen(url, timeout=5)
+        return True
+    except urllib.error.URLError:
+        return False
+
+def invisibleMode():
+    print("")
+    print(f"{Fore.CYAN}You've turned on invisible mode!")
+    print(f"{Fore.GREEN}!send command lost ✓")
+    print(f"{Fore.GREEN}!changeStatus command is lost ✓")
+    print(f"{Fore.GREEN}Bot status invisible ✓")
 
 
-    def invisibleMode():
-        print("")
-        print(f"{Fore.CYAN}You've turned on invisible mode!")
-        print(f"{Fore.GREEN}!send command lost ✓")
-        print(f"{Fore.GREEN}!changeStatus command is lost ✓")
-        print(f"{Fore.GREEN}Bot status invisible ✓")
-
-
-    async def read_user_input():
-        print(f"{Fore.GREEN}Interaction complete ! For help, try this :{Fore.CYAN} !help")
-        while True:
-            tempInput = await asyncio.get_event_loop().run_in_executor(None, input, f"{Fore.LIGHTGREEN_EX}")
-            if tempInput.lower() == "!help":
-                print(f"{Fore.CYAN}!send {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<message>")
-                print(f"{Fore.CYAN}!monitoringMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
-                print(f"{Fore.CYAN}!emergencyMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
-                print(f"{Fore.CYAN}!ban {Fore.LIGHTCYAN_EX}<userID>")
-                print(f"{Fore.CYAN}!kick {Fore.LIGHTCYAN_EX}<userID>")
-                print(f"{Fore.CYAN}!mute {Fore.LIGHTCYAN_EX}<userID> {Fore.BLUE}<duration (in minutes)>")
-                print(f"{Fore.CYAN}!rootInfo {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
-                print(f"{Fore.CYAN}!clear {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count>")
-                print(f"{Fore.CYAN}!changeStatus {Fore.LIGHTCYAN_EX}<type> {Fore.BLUE}<name>")  # type = game(discord.Game)
-                print(f"{Fore.CYAN}!spam {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count> {Fore.LIGHTMAGENTA_EX}<message>")
-                print(f"{Fore.CYAN}!invisibleMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
-                print(f"{Fore.CYAN}!role {Fore.LIGHTCYAN_EX}<+/-> {Fore.BLUE}<role ID> {Fore.LIGHTMAGENTA_EX}<user ID>")
-            elif tempInput.lower().startswith("!send"):
-                try:
-                    channelId = int(tempInput.split()[1].lower())
-                    channel = bot.get_channel(channelId)
-                    if channel:
-                        await channel.send(f"{' '.join(tempInput.split()[2:])}")
-                        print(f"{Fore.LIGHTGREEN_EX} Your message has been sent ✓")
-                    else:
-                        print(f"{Fore.LIGHTYELLOW_EX}Channel with ID {channelId} not found")
-                        print(f"{Fore.LIGHTRED_EX} Send operation failed x")
-                except Exception as e:
-                    print(f"{Fore.RED}Error")
-            elif tempInput.lower() == "!monitoringMode":
-                print(f"{Fore.CYAN}Monitoring mode is on! Listening to all messages and input blocked")
-                return
-            elif tempInput.lower() == "!emergencyMode":
-                print(
-                    f"{Fore.RED} EMERGENCY MODE: When emergency mode is turned on, your bot will exit all servers and lock itself!")
-                confirm = input(f"{Fore.LIGHTYELLOW_EX}Are you sure? (Y/N)(default:N) ")
-                if confirm.lower() == "y":
-                    await emergencyMode()
+async def read_user_input():
+    print(f"{Fore.GREEN}Interaction complete ! For help, try this :{Fore.CYAN} !help")
+    while True:
+        tempInput = await asyncio.get_event_loop().run_in_executor(None, input, f"{Fore.LIGHTGREEN_EX}")
+        if tempInput == "!help":
+            print(f"{Fore.CYAN}!send {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<message>")
+            print(f"{Fore.CYAN}!monitoringMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!emergencyMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!ban {Fore.LIGHTCYAN_EX}<userID>")
+            print(f"{Fore.CYAN}!kick {Fore.LIGHTCYAN_EX}<userID>")
+            print(f"{Fore.CYAN}!mute {Fore.LIGHTCYAN_EX}<userID> {Fore.BLUE}<duration (in minutes)>")
+            print(f"{Fore.CYAN}!rootInfo {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!clear {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count>")
+            print(f"{Fore.CYAN}!changeStatus {Fore.LIGHTCYAN_EX}<type> {Fore.BLUE}<name>")  # type = game(discord.Game)
+            print(f"{Fore.CYAN}!spam {Fore.LIGHTCYAN_EX}<channelId> {Fore.BLUE}<count> {Fore.LIGHTMAGENTA_EX}<message>")
+            print(f"{Fore.CYAN}!invisibleMode {Fore.LIGHTMAGENTA_EX}(does not take arguments)")
+            print(f"{Fore.CYAN}!role {Fore.LIGHTCYAN_EX}<+/-> {Fore.BLUE}<role ID> {Fore.LIGHTMAGENTA_EX}<user ID>")
+        elif tempInput.startswith("!send"):
+            try:
+                channelId = int(tempInput.split()[1])
+                channel = bot.get_channel(channelId)
+                if channel:
+                    await channel.send(f"{' '.join(tempInput.split()[2:])}")
+                    print(f"{Fore.LIGHTGREEN_EX} Your message has been sent ✓")
                 else:
-                    print(f"{Fore.YELLOW}Emergency mode cancelled.")
-            elif tempInput.lower() == "!rootInfo":
-                print(f"{Fore.CYAN}discord.com (hidden IP address) {Fore.GREEN} [DİSCORD][ACTIVE]")
-                print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTIVE]")
-            elif tempInput.split()[0].lower() == "!ban":
-                try:
-                    user = await bot.fetch_user(tempInput.split()[1])
-                    guild = discord.utils.get(bot.guilds)
-                    await guild.ban(user, reason=f"Banned by {bot.user.name} using OBC")
-                    print(f"{Fore.GREEN}transaction successful  ✓")
-                except Exception as e:
-                    print(f"{Fore.RED}transaction failed x :::: {e}")
-                tempInput.split()[1]
-            elif tempInput.split()[0].lower() == "!kick":
+                    print(f"{Fore.LIGHTYELLOW_EX}Channel with ID {channelId} not found")
+                    print(f"{Fore.LIGHTRED_EX} Send operation failed x")
+            except Exception as e:
+                print(f"{Fore.RED}Error: {e}")
+        elif tempInput == "!monitoringmode":
+            print(f"{Fore.CYAN}Monitoring mode is on! Listening to all messages and input blocked")
+            return
+        elif tempInput == "!emergencymode":
+            print(
+                f"{Fore.RED} EMERGENCY MODE: When emergency mode is turned on, your bot will exit all servers and lock itself!")
+            confirm = input(f"{Fore.LIGHTYELLOW_EX}Are you sure? (Y/N)(default:N) ")
+            if confirm.lower() == "y":
+                await emergencyMode()
+            else:
+                print(f"{Fore.YELLOW}Emergency mode cancelled.")
+        elif tempInput == "!rootinfo":
+            print(f"{Fore.CYAN}discord.com (hidden IP address) {Fore.GREEN} [DİSCORD][ACTIVE]")
+            print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTIVE]")
+        elif tempInput.split()[0] == "!ban":
+            try:
+                user = await bot.fetch_user(tempInput.split()[1])
                 guild = discord.utils.get(bot.guilds)
+                await guild.ban(user, reason=f"Banned by {bot.user.name} using OBC")
+                print(f"{Fore.GREEN}transaction successful  ✓")
+            except Exception as e:
+                print(f"{Fore.RED}transaction failed x :::: {e}")
+            tempInput.split()[1]
+        elif tempInput.split()[0] == "!kick":
+            guild = discord.utils.get(bot.guilds)
+            try:
+                member = guild.get_member(int(tempInput.split()[1]))
+                await guild.kick(member, reason=f"Kicked by {bot.user.name} using OBC")
+                print(f"{Fore.GREEN}Process successful ✓")
+            except Exception as e:
+                print(f"{Fore.RED}Operation failed x ::::{e} ")
+        elif tempInput.split()[0] == "!clear":
+            channel = bot.get_channel(int(tempInput.split()[1]))
+            if not channel:
+                print(f"{Fore.LIGHTRED_EX}The channel in question was not found x")
+            else:
+                deleted = await channel.purge(limit=int(tempInput.split()[2]))
+                print(f"{Fore.CYAN}{len(deleted)}{Fore.LIGHTGREEN_EX} messages deleted ✓")
+        elif tempInput.split()[0] == "!changestatus":
+            if tempInput.split()[1] == "game":
                 try:
-                    member = guild.get_member(int(tempInput.split()[1]))
-                    await guild.kick(member, reason=f"Kicked by {bot.user.name} using OBC")
-                    print(f"{Fore.GREEN}Process successful ✓")
+                    await bot.change_presence(activity=discord.Game(name=' '.join(tempInput.split()[2:])))
+                    print(f"{Fore.GREEN}Operation successful ✓")
                 except Exception as e:
-                    print(f"{Fore.RED}Operation failed x ::::{e} ")
-            elif tempInput.split()[0].lower() == "!clear":
-                channel = bot.get_channel(int(tempInput.split()[1]))
-                if not channel:
-                    print(f"{Fore.LIGHTRED_EX}The channel in question was not found x")
-                else:
-                    deleted = await channel.purge(limit=int(tempInput.split()[2]))
-                    print(f"{Fore.CYAN}{len(deleted)}{Fore.LIGHTGREEN_EX} messages deleted ✓")
-            elif tempInput.split()[0].lower() == "!changestatus":
-                if tempInput.split()[1] == "game":
-                    try:
-                        await bot.change_presence(activity=discord.Game(name=' '.join(tempInput.split()[2:])))
-                        print(f"{Fore.GREEN}Operation successful ✓")
-                    except Exception as e:
-                        print(f"{Fore.RED}Operation failed x: {e}")
-                elif tempInput.split()[1].lower() == "stream":
-                    try:
-                        await bot.change_presence(activity=discord.Streaming(name=' '.join(tempInput.split()[2:])))
-                        print(f"{Fore.GREEN}Operation successful ✓")
-                    except Exception as e:
-                        print(f"{Fore.RED}Operation failed x: {e}")
-                elif tempInput.split()[1].lower() == "listen":
-                    try:
-                        await bot.change_presence(
-                            activity=discord.Activity(type=discord.ActivityType.listening,
-                                                    name=' '.join(tempInput.split()[2:])))
-                        print(f"{Fore.GREEN}Operation successful ✓")
-                    except Exception as e:
-                        print(f"{Fore.RED}Operation failed x: {e}")
-                elif tempInput.split()[1].lower() == "watch":
-                    try:
-                        await bot.change_presence(
-                            activity=discord.Activity(type=discord.ActivityType.watching,
-                                                    name=' '.join(tempInput.split()[2:])))
-                        print(f"{Fore.GREEN}Operation successful ✓")
-                    except Exception as e:
-                        print(f"{Fore.RED}Operation failed x: {e}")
-                elif tempInput.split()[1].lower() == "custom":
-                    try:
-                        await bot.change_presence(
-                            activity=discord.Activity(type=discord.ActivityType.custom,
-                                                    name=' '.join(tempInput.split()[2:])))
-                        print(f"{Fore.GREEN}Operation successful ✓")
-                    except Exception as e:
-                        print(f"{Fore.RED}Operation failed x: {e}")
-                elif tempInput.split()[1].lower() == "invisible":
-                    try:
-                        await bot.change_presence(status=discord.Status.invisible)
-                        print(f"{Fore.GREEN}Operation successful ✓")
-                    except Exception as e:
-                        print(f"{Fore.RED}Operation failed x: {e}")
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "stream":
+                try:
+                    await bot.change_presence(activity=discord.Streaming(name=' '.join(tempInput.split()[2:])))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "listen":
+                try:
+                    await bot.change_presence(
+                        activity=discord.Activity(type=discord.ActivityType.listening,
+                                                  name=' '.join(tempInput.split()[2:])))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "watch":
+                try:
+                    await bot.change_presence(
+                        activity=discord.Activity(type=discord.ActivityType.watching,
+                                                  name=' '.join(tempInput.split()[2:])))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "custom":
+                try:
+                    await bot.change_presence(
+                        activity=discord.Activity(type=discord.ActivityType.custom,
+                                                  name=' '.join(tempInput.split()[2:])))
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "invisible":
+                try:
+                    await bot.change_presence(status=discord.Status.invisible)
+                    print(f"{Fore.GREEN}Operation successful ✓")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
 
-            elif tempInput.split()[0].lower() == "!spam":
-                spamChannelID = int(tempInput.split()[1])
-                count = tempInput.split()[2]
-                msg = tempInput.split()[3:]
-                i = 0
-                mychannel = bot.get_channel(spamChannelID)
-                print(f"{Fore.CYAN}Process initiated")
-                while i < int(count):
-                    await mychannel.send(f"{' '.join(msg)}")
-                    i = i + 1
-                print(f"{Fore.GREEN}Operation successful ✓")
-            elif tempInput.split()[0].lower() == "!invisibleMode":
-                tempInput = input(f"{Fore.YELLOW} Are you sure (y/n)")
-                if tempInput.lower() == "y" or tempInput.lower() == "yes":
-                    invisibleMode()
-                else:
-                    print(f"{Fore.RED} xxx")
-            elif tempInput.split()[0].lower() == "!role":
-                if tempInput.split()[1] == "+":
-                    roleID = int(tempInput.split()[2])
-                    userID = int(tempInput.split()[3])
-                    try:
-                        for guild in bot.guilds:
-                            member = guild.get_member(userID)
-                            if member is None:
-                                print(f"{Fore.RED}user not found in {guild.name} x")
-                                continue
-                            role = guild.get_role(roleID)
-                            if role is None:
-                                print(f"{Fore.RED}{guild.name} not found x")
-                                continue
-
-                        if role not in member.roles:
-                            await member.add_roles(role)
-                            print(f"{Fore.GREEN}Operation successful ✓")
-                        else:
-                            print(f"{Fore.RED}in {guild.name} user({member.name}) already have {role.name} role x")
-                    except Exception as e:
-                        print(f"{Fore.RED}Operation failed x: {e}")
-                elif tempInput.split()[1] == "-":
-                    roleID = int(tempInput.split()[2])
-                    userID = int(tempInput.split()[3])
+        elif tempInput.split()[0] == "!spam":
+            spamChannelID = int(tempInput.split()[1])
+            count = tempInput.split()[2]
+            msg = tempInput.split()[3:]
+            i = 0
+            mychannel = bot.get_channel(spamChannelID)
+            print(f"{Fore.CYAN}Process initiated")
+            while i < int(count):
+                await mychannel.send(f"{' '.join(msg)}")
+                i = i + 1
+            print(f"{Fore.GREEN}Operation successful ✓")
+        elif tempInput.split()[0] == "!invisibleMode":
+            tempInput = input(f"{Fore.YELLOW} Are you sure (y/n)")
+            if tempInput.lower() == "y" or tempInput.lower() == "yes":
+                invisibleMode()
+            else:
+                print(f"{Fore.RED} xxx")
+        elif tempInput.split()[0] == "!role":
+            if tempInput.split()[1] == "+":
+                roleID = int(tempInput.split()[2])
+                userID = int(tempInput.split()[3])
+                try:
                     for guild in bot.guilds:
                         member = guild.get_member(userID)
                         if member is None:
-                            print(f"{Fore.RED}user not found x")
+                            print(f"{Fore.RED}user not found in {guild.name} x")
                             continue
                         role = guild.get_role(roleID)
                         if role is None:
-                            print(f"{Fore.RED}role not found x")
+                            print(f"{Fore.RED}{guild.name} not found x")
                             continue
-                        if role in member.roles:
-                            await member.remove_roles(role)
-                            print(f"{Fore.GREEN}Operation successful ✓")
-                        else:
-                            print(
-                                f"in {guild.name} user({member.name}) already dont have {role.name}")
-            else:
-                print(f"{Fore.CYAN}passed")
+
+                    if role not in member.roles:
+                        await member.add_roles(role)
+                        print(f"{Fore.GREEN}Operation successful ✓")
+                    else:
+                        print(f"{Fore.RED}in {guild.name} user({member.name}) already have {role.name} role x")
+                except Exception as e:
+                    print(f"{Fore.RED}Operation failed x: {e}")
+            elif tempInput.split()[1] == "-":
+                roleID = int(tempInput.split()[2])
+                userID = int(tempInput.split()[3])
+                for guild in bot.guilds:
+                    member = guild.get_member(userID)
+                    if member is None:
+                        print(f"{Fore.RED}user not found x")
+                        continue
+                    role = guild.get_role(roleID)
+                    if role is None:
+                        print(f"{Fore.RED}role not found x")
+                        continue
+                    if role in member.roles:
+                        await member.remove_roles(role)
+                        print(f"{Fore.GREEN}Operation successful ✓")
+                    else:
+                        print(f"in {guild.name} user({member.name}) already dont have {role.name}")
+                        
+        elif tempInput.split()[0].lower() == "!":
+            pass
+                        
+                        
+        else:
+            print(f"{Fore.LIGHTWHITE_EX}Passed")
+            
 
 
 
 
-    @bot.event
-    async def on_ready():
-        print(f"{Fore.LIGHTWHITE_EX}Connected to Discord servers with {bot.user.name} account {Fore.GREEN} ✓")
-        asyncio.create_task(read_user_input())
+@bot.event
+async def on_ready():
+    print(f"{Fore.LIGHTWHITE_EX}Connected to Discord servers with {bot.user.name} account {Fore.GREEN} ✓")
+    asyncio.create_task(read_user_input())
 
-    @bot.event
-    async def on_message(message):
-        if message.author == bot.user:
-            return
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
 
-        print(f"{Fore.CYAN}{message.author}{Fore.LIGHTBLUE_EX}({message.channel.name}): {Fore.WHITE}{message.content}")
-        await bot.process_commands(message)
+    print(f"{Fore.CYAN}{message.author}{Fore.LIGHTBLUE_EX}({message.channel.name}): {Fore.WHITE}{message.content}")
+    await bot.process_commands(message)
 
 
-    TOKEN = input(f"{Fore.CYAN} Please enter the key of the application you want to connect to (token) {Fore.GREEN}>> ")
-    if check_connection():
-        print(f"{Fore.LIGHTWHITE_EX}Connection{Fore.GREEN} ✓")
-    else:
-        print(f"{Fore.LIGHTWHITE_EX}Connection{Fore.RED} x")
-        sys.exit()
+TOKEN = input(f"{Fore.CYAN} Please enter the key of the application you want to connect to (token) {Fore.GREEN}>> ")
+if check_connection():
+    print(f"{Fore.LIGHTWHITE_EX}Connection{Fore.GREEN} ✓")
+else:
+    print(f"{Fore.LIGHTWHITE_EX}Connection{Fore.RED} x")
+    sys.exit()
 
-    try:
-        print(f"{Fore.LIGHTWHITE_EX}Connecting to the app{Fore.GREEN} ✓")
-        bot.run(TOKEN)
-    except Exception as e:
-        print(f"{Fore.LIGHTWHITE_EX}Connecting to the app{Fore.RED} x")
-        print(f"{Fore.YELLOW}Please check if your token is correct.")
-        print(f"{Fore.LIGHTYELLOW_EX}Operation terminated for security reasons: {e}")
-        sys.exit()
-except:
-    print(f"{Fore.GREEN}An error was caught but it was skipped because it did not disrupt the system flow")
+try:
+    print(f"{Fore.LIGHTWHITE_EX}Connecting to the app{Fore.GREEN} ✓")
+    bot.run(TOKEN)
+except Exception as e:
+    print(f"{Fore.LIGHTWHITE_EX}Connecting to the app{Fore.RED} x")
+    print(f"{Fore.YELLOW}Please check if your token is correct.")
+    print(f"{Fore.LIGHTYELLOW_EX}Operation terminated for security reasons: {e}")
+    sys.exit()

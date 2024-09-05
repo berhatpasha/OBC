@@ -25,6 +25,46 @@ OpenBotConsole software allows you to connect to your bot and control it through
 > - Start the software with `python3 main.py` or `python3 main.py <token>`
 > - If you did not specify a token when starting the software (`python3 main.py can be used as <token>`) connect to your bot by entering your token on the first login
 
+# Using
+> If you need help, just use the `!help` command. In addition, this chapter explains the detailed use of commands and what they mean.
+> When you use the `!help` command you will get the following (or equivalent) ::
+> 
+> `!send <channelId> <message>
+!monitoringMode (does not take arguments)
+!emergencyMode (does not take arguments)
+!ban <userID>
+!kick <userID>
+!mute <userID> <duration (in minutes)>
+!rootInfo (does not take arguments)
+!clear <channelId> <count>
+!changeStatus <type> <name>
+!spam <channelId> <count> <message>
+!invisibleMode (does not take arguments)
+!role <+/-> <role ID> <user ID>`
+>
+> Let's explain it all now !
+> The `!send` command takes two parameters: 1.ChannelID 2.message. 
+> 
+> **EXAMPLE  : `!send 4865346983 Hello guys !`**
+>
+> Another command that you may have difficulty using is `!role`
+> Don't worry, it's not difficult to use:
+>
+> **`!role ('+' to give the user the role and '-' to take it away) (RoleID) (UserID) `**
+>
+> **EXAMPLE  : `!role + 9348643996 4876598 !`**
+>
+> ***DONE !***
+
+> Another important issue: **invisibleMode** and **emergencyMode**
+>
+> **emergencyMode**: It is a command that you can use in case of bot theft, token leakage or derivative emergencies to take quick action. When you execute this command, the bot transfers all authorisations, and leaves the servers it is on after the notification message
+>
+> **InvisibleMode** sets the status of the bot to invisible **(if you want to do it yourself, use this command : `!changeStatus invisible`)** AND the message only works in message display mode
+>
+>
+
+
 > ### screenshot
 > ![screenshot](OBC/media/screenshot1.png)
 > ![screenshot](OBC/media/screenshot2.png)

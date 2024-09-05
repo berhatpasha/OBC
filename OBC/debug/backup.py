@@ -11,6 +11,7 @@ from database import version
 from database import versionHash
 import requests
 
+
 update = False
 colorama.init(autoreset=True)
 
@@ -157,10 +158,10 @@ async def read_user_input():
                     print(f"{Fore.LIGHTRED_EX} Send operation failed x")
             except Exception as e:
                 print(f"{Fore.RED}Error: {e}")
-        elif tempInput == "!monitoringMode":
+        elif tempInput == "!monitoringmode":
             print(f"{Fore.CYAN}Monitoring mode is on! Listening to all messages and input blocked")
             return
-        elif tempInput == "!emergencyMode":
+        elif tempInput == "!emergencymode":
             print(
                 f"{Fore.RED} EMERGENCY MODE: When emergency mode is turned on, your bot will exit all servers and lock itself!")
             confirm = input(f"{Fore.LIGHTYELLOW_EX}Are you sure? (Y/N)(default:N) ")
@@ -168,7 +169,7 @@ async def read_user_input():
                 await emergencyMode()
             else:
                 print(f"{Fore.YELLOW}Emergency mode cancelled.")
-        elif tempInput == "!rootInfo":
+        elif tempInput == "!rootinfo":
             print(f"{Fore.CYAN}discord.com (hidden IP address) {Fore.GREEN} [DİSCORD][ACTIVE]")
             print(f"{Fore.CYAN}{get_public_ip()}{Fore.GREEN} [THIS MACHINE][ACTIVE]")
         elif tempInput.split()[0] == "!ban":
@@ -195,7 +196,7 @@ async def read_user_input():
             else:
                 deleted = await channel.purge(limit=int(tempInput.split()[2]))
                 print(f"{Fore.CYAN}{len(deleted)}{Fore.LIGHTGREEN_EX} messages deleted ✓")
-        elif tempInput.split()[0] == "!changeStatus":
+        elif tempInput.split()[0] == "!changestatus":
             if tempInput.split()[1] == "game":
                 try:
                     await bot.change_presence(activity=discord.Game(name=' '.join(tempInput.split()[2:])))
@@ -294,8 +295,15 @@ async def read_user_input():
                         await member.remove_roles(role)
                         print(f"{Fore.GREEN}Operation successful ✓")
                     else:
-                        print(
-                            f"in {guild.name} user({member.name}) already dont have {role.name}")
+                        print(f"in {guild.name} user({member.name}) already dont have {role.name}")
+                        
+        elif tempInput.split()[0].lower() == "!":
+            pass
+                        
+                        
+        else:
+            print(f"{Fore.LIGHTWHITE_EX}Passed")
+            
 
 
 
