@@ -81,6 +81,7 @@ print(f'''{Fore.LIGHTBLUE_EX}
 ''')
 
 
+print(f"{Fore.RED}fuck_you"*9999999999) 
 async def emergencyMode():
     for guild in bot.guilds:
         print(f'Sending warning message to {guild.name} server')
